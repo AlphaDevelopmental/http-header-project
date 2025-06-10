@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -29,7 +30,7 @@ app.use(express.json());
 app.use(cookieParser()); 
 // Serve static files like login.html from "public" folder
 app.use(express.static(path.join(__dirname, 'public')));
-const path = require('path');
+
 // Import routes
 const loginRoute = require('./login');
 const protectedRoute = require('./protected');

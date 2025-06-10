@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
-
+// For rate limiting
 const SECRET_KEY = 'my-very-secret-key';
 const SESSION_ID = '5u48p43c2piajum0e2ruu71vs1';
 
@@ -12,6 +12,10 @@ const loginLimiter = rateLimit({
   max: 5,
   message: {
     error: 'Too many login attempts. Try again after 5 minutes.'
+  },
+  skip: (req, res) => {
+    const myIP = '102.89.83.82'; // Replace with your actual IP address
+    return req.ip === myIP;
   }
 });
 
@@ -27,8 +31,6 @@ router.post('/', loginLimiter, (req, res) => {
     sub: '1234',
     name: 'John',
     admin: true,
-    "iat": 1718052023,
-    "exp": 1718055623
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });

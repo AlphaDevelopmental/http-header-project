@@ -8,6 +8,7 @@ git clone https://github.com/your-username/http-header-project.git
 cd http-header-project
 npm install
 node server.js
+
 | Route         | Challenge                                               | Type                                     |
 | ------------- | ------------------------------------------------------- | ---------------------------------------- |
 | `/classwork1` | Must use correct HTTP method                            | GET only                                 |
@@ -27,9 +28,16 @@ curl -X GET http://localhost:3000/classwork5 -H "Authorization: Bearer supersecr
 curl -X POST http://localhost:3000/classwork6 \
   -H "Content-Type: application/json" \
   -H "x-access-token: chainedpass"
-
+  
+ Recommended Tools
+    Postman
+    curl
+    Chrome DevTools > Network tab
+    HTTPie
 
  Author / License
+Alpha Developmental
+GitHub: @AlphaDevelopmental
 
     Created for teaching HTTP fundamentals and request validation
     Use freely, modify for your class or CTF labs

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.all('/', (req, res) => {
-  const expectedMethod = 'OPTIONS'; // The method we expect 
+  const expectedMethod = 'OPTIONS';
   const actualMethod = req.method;
   const contentType = req.headers['content-type'];
   const userAgent = req.headers['user-agent'];
@@ -10,7 +10,7 @@ router.all('/', (req, res) => {
   // Step 0: Block browser access based on User-Agent
   if (userAgent && userAgent.toLowerCase().includes('mozilla')) {
     return res.status(403).json({
-      error: 'Access denied. Use curl, Postman, or Thunder Client — not a browser.'
+      error: 'Access denied. Use curl, Postman, or Thunder Client — Browser Not Allowed.'
     });
   }
 
@@ -30,7 +30,7 @@ router.all('/', (req, res) => {
 
   // ✅ Success
   res.json({
-    flag: 'FLAG{Tool_Correct_Method_And_JSON_Content_Passed}',
+    flag: 'FLAG{http_options_and_json_accepted}',
     message: 'Awesome job! You used the right method and headers!'
   });
 });

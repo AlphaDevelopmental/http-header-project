@@ -10,7 +10,7 @@ router.all('/', (req, res) => {
   // Step 0: Block browser access based on User-Agent
   if (userAgent && userAgent.toLowerCase().includes('mozilla')) {
     return res.status(403).json({
-      error: 'Access denied. Use curl, Postman, or Thunder Client — not a browser.'
+      error: 'Access denied. Use curl, Postman, or Thunder Client — Browser NOT Allowed.'
     });
   }
 
@@ -28,9 +28,9 @@ router.all('/', (req, res) => {
     });
   }
 
-  // ✅ Success
+  // Success
   res.json({
-    flag: 'FLAG{Tool_Correct_Method_And_JSON_Content_Passed}',
+    flag: 'FLAG{http_get_with_json_success! }',
     message: 'Awesome job! You used the right method and headers!'
   });
 });

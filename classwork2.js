@@ -7,7 +7,7 @@ router.all('/', (req, res) => {
   const userAgent = req.headers['user-agent'];
 
   if (userAgent && userAgent.toLowerCase().includes('mozilla')) {
-    return res.status(403).json({ error: 'Browser not allowed' });
+    return res.status(403).json({ error: 'Browser Not Allowed' });
   }
 
   if (method !== 'POST') {
@@ -18,7 +18,9 @@ router.all('/', (req, res) => {
     return res.status(401).json({ error: 'Missing or invalid x-api-key header' });
   }
 
-  res.json({ flag: 'FLAG{custom_header_key}', message: 'Great! You passed classwork 2.' });
+  res.json({ 
+    flag: 'FLAG{post_and_api_key_verified}', 
+    message: 'Great! You passed classwork 2.' });
 });
 
 module.exports = router;

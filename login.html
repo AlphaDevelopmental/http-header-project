@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Page (Get JWT & Cookie)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background: #fff;
+      padding: 2em;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+
+    .login-box h2 {
+      margin-bottom: 1em;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 0.5em;
+      margin-bottom: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 0.6em;
+      background: #28a745;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .login-box pre {
+      background: #f0f0f0;
+      padding: 0.5em;
+      border-radius: 4px;
+      font-size: 0.85em;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Login to Get JWT</h2>
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="login()">Login</button>
+
+    <div id="response" style="margin-top: 1em;">
+      <h4>JWT Response:</h4>
+      <pre id="jwtDisplay"></pre>
+    </div>
+  </div>
+
+  <script>
+    async function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password }),
+          // Include credentials for cookie handling 
+          credentials: 'include'
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Login failed');
+        }
+
+        document.getElementById('jwtDisplay').innerText = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('jwtDisplay').innerText = `Error: ${err.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
+<!-- This HTML code creates a simple login page that allows users to enter their name and retrieve a JWT token. -->
+<!-- The page includes a form with an input field for the name and a button to submit the form. -->
+<!-- When the button is clicked, it sends a POST request to the '/login' endpoint with the name in the request body. -->
+<!-- If the request is successful, it displays the JWT token in a preformatted text block. -->
+<!-- If there is an error, it displays the error message instead. -->
+<!-- The page is styled with basic CSS to make it visually appealing and user-friendly. -->
+<!-- The script uses the Fetch API to handle the HTTP request and response, and it includes error handling to manage any issues that arise during the request. -->
+<!-- The page is designed to be simple and straightforward, making it easy for users to understand and use. -->
+<!-- The code is structured to be modular, allowing it to be easily integrated into a larger web application. -->
+<!-- The code is designed to provide a simple challenge for users to pass by using the correct method and headers. -->
+<!-- The code is structured to provide feedback to the user about the checks they need to pass, making it suitable for educational or challenge purposes. -->
+<!-- The code is structured to be modular, allowing it to be easily integrated into a larger web application. --

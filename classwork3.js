@@ -8,25 +8,27 @@ router.all('/', (req, res) => {
   const userAgent = req.headers['user-agent'];
 
   if (userAgent && userAgent.toLowerCase().includes('mozilla')) {
-    return res.status(403).json({ error: 'Browser not allowed. Use curl, Postman, or Thunder Client.' });
+    return res.status(403).json({ error: 'Browser Not Allowed. Use curl, Postman, or Thunder Client.' });
   }
   if (method !== 'POST') {
-    return res.status(405).json({ error: 'Use POST method' });
+   return res.status(405).json({ error: `You used ${method}. This challenge requires a POST request.` });
   }
 
-  if (!name) {
-    return res.status(400).json({ error: 'Include ?name=Name of the only lady among us in the query parameters.' });
+  if (!name || name.toLowerCase() !== 'simbiat') {
+  return res.status(400).json({ error: 'Include ?name=Name of the only lady among us in the query parameters.' });
   }
 
   if (!acceptHeader || !acceptHeader.includes('application/json')) {
     return res.status(406).json({ error: 'Header Accept: application/json is required.' });
   }
-
-  res.json({ flag: 'FLAG{query_param_and_accept}', message: `Hi ${name}, challenge passed!` });
+  // If all checks pass, respond with a success message and a flag
+  res.json({ 
+    flag: 'FLAG{post_with_query_and_accept_json}', 
+    message: `Hi ${name}, challenge passed!` });
 });
 
 module.exports = router;
-// This code defines an Express.js route that checks the User-Agent, a query parameter, and the Accept header of incoming GET requests.
+// This code defines an Express.js route that checks the User-Agent, a query parameter, and the Accept header of incoming POST requests.
 // If the User-Agent indicates a browser, it responds with a 403 status code.
 // If the query parameter 'name' is missing, it responds with a 400 status code.
 // If the Accept header is not set to 'application/json', it responds with a 406 status code.

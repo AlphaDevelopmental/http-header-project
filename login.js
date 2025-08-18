@@ -20,6 +20,11 @@ const loginLimiter = rateLimit({
 });
 
 // Login route
+// ✅ Add GET route for browser visits
+router.get('/', (req, res) => {
+  res.send('Login endpoint. Please send a POST request with username and password.');
+});
+
 router.post('/', loginLimiter, (req, res) => {
   // Optional: Check credentials
   const { username, password } = req.body;

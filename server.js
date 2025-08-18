@@ -4,7 +4,11 @@ const app = express();
 const port = 3000;
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-//Global rate limiter: 100 requests per 15 mins per IP
+
+// ✅ Trust proxy to allow rate-limit to use X-Forwarded-For header
+app.set('trust proxy', true);
+
+// Global rate limiter: 100 requests per 15 mins per IP
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
@@ -12,6 +16,7 @@ const limiter = rateLimit({
     error: 'Too many requests from this IP. Please try again later.'
   }
 });
+
 const loginLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   max: 5,
@@ -23,11 +28,14 @@ const loginLimiter = rateLimit({
     return req.ip === myIP;
   }
 });
-//Apply global rate limiter to all routes 102.89.82.207 
+
+// Apply global rate limiter to all routes
 app.use(limiter);
-//Middleware to parse JSON and cookies
+
+// Middleware to parse JSON and cookies
 app.use(express.json()); 
 app.use(cookieParser()); 
+
 // Serve static files like login.html from "public" folder
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -41,16 +49,21 @@ const classwork4 = require('./classwork4');
 const classwork5 = require('./classwork5');
 const classwork6 = require('./classwork6');
 const classwork7 = require('./classwork7');
-//Apply login-specific limiter before /login
+const classwork8 = require('./classwork8');
+
+// Apply login-specific limiter before /login
 app.use('/login', loginLimiter, loginRoute);
 app.use('/protected', protectedRoute);
 app.use('/classwork1', classwork1);
 app.use('/classwork2', classwork2);
 app.use('/classwork3', classwork3);
 app.use('/classwork4', classwork4);
+
 app.use('/classwork5', protectedRoute, classwork5);
 app.use('/classwork6', protectedRoute, classwork6);
 app.use('/classwork7', protectedRoute, classwork7);
+app.use('/classwork8', protectedRoute, classwork8);
+
 app.get('/', (req, res) => {
   res.send('Welcome to the HTTP Header Challenge Server. Use /login to get started.');
 });
@@ -66,3 +79,4 @@ app.listen(port, () => {
 });
 
 module.exports = app;
+

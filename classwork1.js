@@ -4,8 +4,9 @@ const router = express.Router();
 router.all('/', (req, res) => {
   const expectedMethod = 'GET';
   const actualMethod = req.method;
-  const contentType = req.headers['content-type'];
+  const acceptHeader = req.headers['accept'];
   const userAgent = req.headers['user-agent'];
+  const apiVersion = req.headers['x-api-version'];
 
   // Step 0: Block browser access based on User-Agent
   if (userAgent && userAgent.toLowerCase().includes('mozilla')) {
@@ -21,16 +22,23 @@ router.all('/', (req, res) => {
     });
   }
 
-  // Step 2: Check for Content-Type: application/json
-  if (!contentType || contentType.toLowerCase() !== 'application/json') {
-    return res.status(415).json({
-      error: 'Nice try! But you must set Content-Type to application/json'
+  // Step 2: Check for Accept: application/json (more realistic for GET)
+  if (!acceptHeader || !acceptHeader.includes('application/json')) {
+    return res.status(406).json({
+      error: 'Missing Accept header. Set Accept: application/json'
+    });
+  }
+
+  // Step 3: Check for API version header (common in real APIs)
+  if (!apiVersion || apiVersion !== 'v1') {
+    return res.status(400).json({
+      error: 'Missing or invalid X-API-Version header. Use "v1"'
     });
   }
 
   // Success
   res.json({
-    flag: 'FLAG{http_get_with_json_success! }',
+    flag: 'FLAG{http_get_with_headers_success!}',
     message: 'Awesome job! You used the right method and headers!'
   });
 });
@@ -45,3 +53,9 @@ module.exports = router;
 // The code is designed to provide feedback to the user about the checks they need to pass, making it suitable for educational or challenge purposes.
 // The flag is a placeholder and should be replaced with an actual flag value in a real application.
 // The code is structured to be modular, allowing it to be easily integrated into a larger Express application.
+/*
+curl -X GET http://localhost:3000/classwork1 \
+-H "Accept: application/json" \
+-H "X-API-Version: v1" \
+-H "User-Agent: curl/7.85.0"
+*/

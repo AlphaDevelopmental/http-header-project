@@ -18,6 +18,7 @@ const limiter = rateLimit({
 const loginLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   max: 5,
+  validate: false, // Disable automatic validation
   message: { error: 'Too many login attempts. Try again after 5 minutes.' },
   skip: (req) => {
     const whitelistedIP = '127.0.0.1';

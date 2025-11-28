@@ -8,36 +8,45 @@ router.all('/', (req, res) => {
   const contentType = req.headers['content-type'];
   const { action } = req.body;
 
-  // Step 0: Block browser access
   if (userAgent && userAgent.toLowerCase().includes('mozilla')) {
-    return res.status(403).json({ error: 'Browser Not Allowed' });
+    return res.status(403).json({ 
+      error: 'Browser not allowed',
+      hint: 'Use API client like curl or Postman'
+    });
   }
 
-  // Step 1: Must use POST method
   if (method !== 'POST') {
-    return res.status(405).json({ error: 'Use POST method' });
+    return res.status(405).json({ 
+      error: `Method ${method} not allowed`,
+      hint: 'This challenge requires POST method'
+    });
   }
 
-  // Step 2: Content-Type validation
   if (!contentType || contentType.toLowerCase() !== 'application/json') {
-    return res.status(415).json({ error: 'Content-Type must be application/json' });
+    return res.status(415).json({ 
+      error: 'Invalid Content-Type',
+      hint: 'Set Content-Type: application/json'
+    });
   }
 
-  // Step 3: API Key validation (more realistic key)
   if (apiKey !== 'ctf-api-key-2024') {
-    return res.status(401).json({ error: 'Missing or invalid X-API-Key header, set to ctf-api-key-2024.' });
+    return res.status(401).json({ 
+      error: 'Missing or invalid API key',
+      hint: 'Add header: X-API-Key: ctf-api-key-2024'
+    });
   }
 
-  // Step 4: JSON body validation (makes POST more meaningful)
   if (!action || action !== 'authenticate') {
     return res.status(422).json({ 
-      error: 'Request body must include {"action": "authenticate"}' 
+      error: 'Invalid request body',
+      hint: 'Send JSON body: {"action": "authenticate"}'
     });
   }
 
   res.json({
     flag: 'FLAG{post_api_key_body_validated!}',
-    message: 'Great! You passed classwork 2 with proper API authentication.'
+    message: '✅ Challenge 2 completed!',
+    nextChallenge: '/classwork3'
   });
 });
 

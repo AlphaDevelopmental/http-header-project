@@ -8,38 +8,38 @@ router.all('/', (req, res) => {
   const userAgent = req.headers['user-agent'];
   const apiVersion = req.headers['x-api-version'];
 
-  // Step 0: Block browser access based on User-Agent
   if (userAgent && userAgent.toLowerCase().includes('mozilla')) {
     return res.status(403).json({
-      error: 'Access denied. Use curl, Postman, or Thunder Client — Browser NOT Allowed.'
+      error: 'Browser access denied',
+      hint: 'Use curl, Postman, or Thunder Client instead'
     });
   }
 
-  // Step 1: Check if the method used is GET
   if (actualMethod !== expectedMethod) {
     return res.status(405).json({
-      error: `Oops! ${actualMethod} is not allowed. Hint: Try another common method.`
+      error: `Method ${actualMethod} not allowed`,
+      hint: 'Try a method used to retrieve data'
     });
   }
 
-  // Step 2: Check for Accept: application/json (more realistic for GET)
   if (!acceptHeader || !acceptHeader.includes('application/json')) {
     return res.status(406).json({
-      error: 'Missing Accept header. Set Accept: application/json'
+      error: 'Missing Accept header',
+      hint: 'Set Accept: application/json'
     });
   }
 
-  // Step 3: Check for API version header (common in real APIs)
   if (!apiVersion || apiVersion !== 'v1') {
     return res.status(400).json({
-      error: 'Missing or invalid X-API-Version header. Use "v1"'
+      error: 'Missing or invalid API version',
+      hint: 'Add header: X-API-Version: v1'
     });
   }
 
-  // Success
   res.json({
     flag: 'FLAG{http_get_with_headers_success!}',
-    message: 'Awesome job! You used the right method and headers!'
+    message: '✅ Challenge 1 completed!',
+    nextChallenge: '/classwork2'
   });
 });
 

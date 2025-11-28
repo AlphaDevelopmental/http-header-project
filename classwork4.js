@@ -8,10 +8,8 @@ router.all('/', (req, res) => {
   const userAgent = req.headers['user-agent'];
   const optionsToken = req.headers['x-options-token'];
   const origin = req.headers['origin'];
-  const referer = req.headers['referer'];
   const accessControl = req.headers['access-control-request-method'];
 
-  // Step 1: Block browser access
   const allowedAgents = ['curl', 'postman', 'thunder'];
   const isAllowedClient = allowedAgents.some(agent =>
     userAgent && userAgent.toLowerCase().includes(agent)
@@ -19,32 +17,32 @@ router.all('/', (req, res) => {
 
   if (!isAllowedClient) {
     return res.status(403).json({
-      error: 'Access denied. Use curl, Postman, or Thunder Client — Browser Not Allowed.'
+      error: 'Browser not allowed',
+      hint: 'Use API client'
     });
   }
 
-  // Step 2: Method must be OPTIONS
   if (actualMethod !== expectedMethod) {
     return res.status(405).json({
-      error: `Method Not Allowed. Hint: Try a method used for preflight requests instead of ${actualMethod}.`
+      error: `Method ${actualMethod} not allowed`,
+      hint: 'Try the method used for CORS preflight requests'
     });
   }
 
-  // Step 3: Content-Type validation
   if (!contentType || contentType.toLowerCase() !== 'application/json') {
     return res.status(415).json({
-      error: 'Content-Type must be application/json'
+      error: 'Invalid Content-Type',
+      hint: 'Set Content-Type: application/json'
     });
   }
 
-  // Step 4: Options Token (more realistic)
   if (!optionsToken || optionsToken !== 'cors-preflight-2024') {
     return res.status(401).json({
-      error: 'Missing or invalid X-Options-Token header'
+      error: 'Missing or invalid options token',
+      hint: 'Add header: X-Options-Token: cors-preflight-2024'
     });
   }
 
-  // Step 5: Origin validation (more specific)
   const validOrigins = ['https://api.ctf.local', 'http://localhost:3000'];
   const originMatch = origin && validOrigins.some(validOrigin => 
     origin.toLowerCase() === validOrigin.toLowerCase()
@@ -52,18 +50,18 @@ router.all('/', (req, res) => {
   
   if (!originMatch) {
     return res.status(403).json({
-      error: 'Invalid Origin header. Must be from approved domain.'
+      error: 'Invalid Origin',
+      hint: 'Set Origin to: http://localhost:3000 or https://api.ctf.local'
     });
   }
 
-  // Step 6: CORS preflight header (teaches real CORS)
   if (!accessControl || accessControl.toUpperCase() !== 'POST') {
     return res.status(400).json({
-      error: 'Missing Access-Control-Request-Method header. Set to POST.'
+      error: 'Missing CORS preflight header',
+      hint: 'Add header: Access-Control-Request-Method: POST'
     });
   }
 
-  // Success - proper CORS preflight response
   res.set({
     'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -72,11 +70,14 @@ router.all('/', (req, res) => {
 
   res.json({
     flag: 'FLAG{options_cors_preflight_mastered!}',
-    message: 'Excellent! You understand CORS preflight requests!'
+    message: '✅ Challenge 4 completed! You understand CORS!',
+    nextChallenge: '/classwork5',
+    note: 'Next challenges require authentication. Visit /login first'
   });
 });
 
 module.exports = router;
+
 // This code defines an Express.js route that checks the HTTP method, Content-Type header, and other headers for OPTIONS requests.
 // If the method is not OPTIONS, it responds with a 405 status code and an error message.
 // If the Content-Type is not application/json, it responds with a 415 status code and an error message.

@@ -1,41 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const rateLimit = require('express-rate-limit');
-// For rate limiting
-const SECRET_KEY = 'my-very-secret-key';
-const SESSION_ID = '5u48p43c2piajum0e2ruu71vs1';
+const { SECRET_KEY, SESSION_ID, ADMIN_CREDENTIALS } = require('./config');
 
-// Rate limiter
-const loginLimiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 5,
-  message: {
-    error: 'Too many login attempts. Try again after 5 minutes.'
-  },
-  skip: (req, res) => {
-    const myIP = '102.89.83.82'; // Replace with your actual IP address
-    return req.ip === myIP;
-  }
-});
-
-// Login route
-// ✅ Add GET route for browser visits
 router.get('/', (req, res) => {
-  res.send('Login endpoint. Please send a POST request with username and password.');
+  res.json({
+    message: 'Login endpoint. Send POST request with credentials.',
+    format: { username: 'admin', password: 'pass123' },
+    hint: 'Use Content-Type: application/json'
+  });
 });
 
-router.post('/', loginLimiter, (req, res) => {
-  // Optional: Check credentials
+router.post('/', (req, res) => {
   const { username, password } = req.body;
-  if (username !== 'admin' || password !== 'pass123') {
-    return res.status(401).json({ error: 'Invalid credentials' });
+
+  if (username !== ADMIN_CREDENTIALS.username || password !== ADMIN_CREDENTIALS.password) {
+    return res.status(401).json({ 
+      error: 'Invalid credentials',
+      hint: 'Check the config file for valid credentials'
+    });
   }
 
   const payload = {
     sub: '1234',
-    name: 'John',
+    name: username,
     admin: true,
+    iat: Math.floor(Date.now() / 1000)
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
@@ -47,15 +37,12 @@ router.post('/', loginLimiter, (req, res) => {
   });
 
   res.json({
-    message: 'Login successful. Use this token and cookie to access protected routes.',
-    token: token
+    message: 'Login successful!',
+    token: token,
+    sessionId: SESSION_ID,
+    expiresIn: '1 hour',
+    usage: 'Use this token in Authorization: Bearer <token> header'
   });
 });
 
 module.exports = router;
-// This code defines a login route that issues a JWT token and sets a session cookie.
-// The route is protected by a rate limiter to prevent abuse.
-// The JWT token contains user information and is signed with a secret key.
-// The session cookie is set with security options to prevent XSS and CSRF attacks.
-// The login route can be used to authenticate users and provide them with a token for accessing protected routes.
-// This code defines an Express.js router that handles login requests.

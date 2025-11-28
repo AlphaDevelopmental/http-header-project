@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const SECRET = 'supersecretkey'; // Use same secret as in login.js
+const { SECRET_KEY, SESSION_ID } = require('./config');
 
 module.exports = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -7,24 +7,37 @@ module.exports = (req, res, next) => {
   const customHeader = req.headers['x-custom-header'];
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+    return res.status(401).json({ 
+      error: 'Missing or invalid Authorization header',
+      hint: 'Add header: Authorization: Bearer <your_token>'
+    });
   }
 
   const token = authHeader.split(' ')[1];
 
-  if (cookie !== '5u48p43c2piajum0e2ruu71vs1') {
-    return res.status(401).json({ error: 'Invalid session cookie' });
+  if (cookie !== SESSION_ID) {
+    return res.status(401).json({ 
+      error: 'Invalid session cookie',
+      hint: `Expected sessionid=${SESSION_ID}`
+    });
   }
 
   if (customHeader !== 'secretvalue') {
-    return res.status(403).json({ error: 'Missing or invalid custom header' });
+    return res.status(403).json({ 
+      error: 'Missing or invalid custom header',
+      hint: 'Add header: X-Custom-Header: secretvalue'
+    });
   }
 
   try {
-    jwt.verify(token, SECRET);
-    next(); // All good
+    const decoded = jwt.verify(token, SECRET_KEY);
+    req.user = decoded;
+    next();
   } catch (err) {
-    return res.status(401).json({ error: 'Invalid token' });
+    return res.status(401).json({ 
+      error: 'Invalid or expired token',
+      hint: 'Login again to get a fresh token'
+    });
   }
 };
 // This middleware checks for the presence of a valid JWT token in the Authorization header,

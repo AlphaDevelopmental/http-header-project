@@ -11,70 +11,69 @@ router.all('/', (req, res) => {
   const bodyCode = req.body?.code;
 
   const validNames = ['daniel', 'ibukunoluwa'];
-
-  // Whitelist of allowed clients
   const allowedAgents = ['curl', 'postman', 'thunder'];
   const isAllowedClient = allowedAgents.some(agent =>
     userAgent && userAgent.toLowerCase().includes(agent)
   );
 
-  // Step 1: Check User-Agent
   if (!isAllowedClient) {
     return res.status(403).json({
-      error: 'Browser Not Allowed. Use curl, Postman, or Thunder Client.'
+      error: 'Browser not allowed',
+      hint: 'Use curl, Postman, or Thunder Client'
     });
   }
 
-  // Step 2: Check HTTP Method
   if (method !== 'POST') {
     return res.status(405).json({ 
-      error: `You used ${method}. This challenge requires a POST request.` 
+      error: `Method ${method} not allowed`,
+      hint: 'Use POST method'
     });
   }
 
-  // Step 3: Check Content-Type
   if (!contentType || contentType.toLowerCase() !== 'application/json') {
     return res.status(415).json({
-      error: 'Content-Type header must be application/json'
+      error: 'Invalid Content-Type',
+      hint: 'Set Content-Type: application/json'
     });
   }
 
-  // Step 4: Check Query Parameter (less obvious hint)
   if (!name || !validNames.includes(name.toLowerCase())) {
     return res.status(400).json({
-      error: 'Missing query parameter "name". Try common names from the team.'
+      error: 'Missing or invalid query parameter',
+      hint: 'Add ?name=daniel or ?name=ibukunoluwa'
     });
   }
 
-  // Step 5: Check Accept Header
   if (!acceptHeader || !acceptHeader.includes('application/json')) {
     return res.status(406).json({ 
-      error: 'Accept header must include application/json' 
+      error: 'Invalid Accept header',
+      hint: 'Set Accept: application/json'
     });
   }
 
-  // Step 6: Check Challenge Token
-  if (!challengeToken || challengeToken !== 'ctf-challenge-2025') {
+  if (!challengeToken || challengeToken !== 'ctf-challenge-2024') {
     return res.status(401).json({
-      error: 'Missing or invalid X-Challenge-Token header'
+      error: 'Missing or invalid challenge token',
+      hint: 'Add header: X-Challenge-Token: ctf-challenge-2024'
     });
   }
 
-  // Step 7: Check JSON Body
   if (!bodyCode || bodyCode !== 'ladiesfirst') {
     return res.status(422).json({
-      error: 'Missing or incorrect "code" field in JSON body'
+      error: 'Invalid code in request body',
+      hint: 'Send JSON: {"code": "ladiesfirst"}'
     });
   }
 
-  // Success!
   res.json({
     flag: 'FLAG{post_query_headers_body_validated!}',
-    message: `Hi ${name}, you've mastered multi-layered HTTP validation!`
+    message: `✅ Well done ${name}! Challenge 3 completed!`,
+    nextChallenge: '/classwork4'
   });
 });
 
 module.exports = router;
+
 // This code defines an Express.js route that checks the User-Agent, a query parameter, and the Accept header of incoming POST requests.
 // If the User-Agent indicates a browser, it responds with a 403 status code.
 // If the query parameter 'name' is missing, it responds with a 400 status code.

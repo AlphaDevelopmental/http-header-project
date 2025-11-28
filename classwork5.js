@@ -8,23 +8,38 @@ const validateRequest = (req, res, next) => {
   const cookie = req.cookies.sessionid;
 
   if (userAgent?.toLowerCase().includes('mozilla')) {
-    return res.status(403).json({ error: 'Browser access blocked. Use curl, Postman, or Thunder Client.' });
+    return res.status(403).json({ 
+      error: 'Browser access blocked',
+      hint: 'Use API client'
+    });
   }
 
   if (contentType?.toLowerCase() !== 'application/json') {
-    return res.status(415).json({ error: 'Content-Type must be application/json' });
+    return res.status(415).json({ 
+      error: 'Invalid Content-Type',
+      hint: 'Set Content-Type: application/json'
+    });
   }
 
   if (customHeader !== 'secretvalue') {
-    return res.status(400).json({ error: 'X-Custom-Header must be "secretvalue"' });
+    return res.status(400).json({ 
+      error: 'Invalid custom header',
+      hint: 'Add header: X-Custom-Header: secretvalue'
+    });
   }
 
   if (cookie !== SESSION_ID) {
-    return res.status(401).json({ error: `Invalid session cookie. Expected sessionid=${SESSION_ID}` });
+    return res.status(401).json({ 
+      error: 'Invalid session cookie',
+      hint: `Login first at /login to get cookie`
+    });
   }
 
   if (!authorization?.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Missing or malformed Authorization header' });
+    return res.status(401).json({ 
+      error: 'Missing Authorization header',
+      hint: 'Add header: Authorization: Bearer <token_from_login>'
+    });
   }
 
   try {
@@ -32,52 +47,44 @@ const validateRequest = (req, res, next) => {
     req.user = jwt.verify(token, SECRET_KEY);
     next();
   } catch {
-    return res.status(401).json({ error: 'Invalid or expired JWT token' });
+    return res.status(401).json({ 
+      error: 'Invalid or expired JWT token',
+      hint: 'Login again to get fresh token'
+    });
   }
 };
 
 router.put('/', validateRequest, (req, res) => {
-  res.json({ flag: 'FLAG{Put_with_headers_token_cookie_passed}', message: '🎉 PUT challenge passed!' });
+  res.json({ 
+    flag: 'FLAG{put_with_headers_token_cookie_passed}', 
+    message: '✅ PUT challenge passed!',
+    note: 'Try PATCH and DELETE methods too'
+  });
 });
 
 router.patch('/', validateRequest, (req, res) => {
-  res.json({ flag: 'FLAG{patch_authorized_header_cookie_check_success}', message: '🎉 PATCH challenge passed!' });
+  res.json({ 
+    flag: 'FLAG{patch_authorized_header_cookie_check_success}', 
+    message: '✅ PATCH challenge passed!',
+    note: 'One more method to go!'
+  });
 });
 
 router.delete('/', validateRequest, (req, res) => {
-  res.json({ flag: 'FLAG{delete_header_cookie_jwt_validation_complete}', message: '🎉 DELETE challenge passed!' });
+  res.json({ 
+    flag: 'FLAG{delete_header_cookie_jwt_validation_complete}', 
+    message: '✅ DELETE challenge passed!',
+    nextChallenge: '/classwork6'
+  });
 });
 
 module.exports = router;
-
-
-// first of get you jwt token and cookies 
-
-/*
-curl -X POST http://localhost:3000/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "pass123"}'
-// This will return a JWT token and set a session cookie.
-// Use the token and cookie in subsequent requests to protected routes.
-// Make sure to replace the SECRET_KEY and SESSION_ID in config.js with your actual values.
-
-curl -X PUT http://localhost:3000/classwork5 \
-  -H "Content-Type: application/json" \
-  -H "X-Custom-Header: secretvalue" \
-  -H "Authorization: Bearer <your_token>" \
-  --cookie "sessionid=5u48p43c2piajum0e2ruu71vs1" \
-  -d '{}'
-// This will test the PUT route with the required headers and cookie.
-curl -X PATCH http://localhost:3000/classwork5 \
-  -H "Content-Type: application/json" \
-  -H "X-Custom-Header: secretvalue" \
-  -H "Authorization: Bearer <your_token>" \
-  --cookie "sessionid=5u48p43c2piajum0e2ruu71vs1" \
-  -d '{}'
-
-  curl -X DELETE http://localhost:3000/classwork5 \
-  -H "Content-Type: application/json" \
-  -H "X-Custom-Header: secretvalue" \
-  -H "Authorization: Bearer <your_token>" \
-  --cookie "sessionid=5u48p43c2piajum0e2ruu71vs1"
-*/
+// This code defines an Express.js route that handles PUT, PATCH, and DELETE requests.
+// It uses a middleware function `validateRequest` to check for the presence of specific headers,
+// a valid JWT token in the Authorization header, and a valid session cookie.
+// If any of these checks fail, it responds with an appropriate error message and hint.
+// If all checks pass, it allows the request to proceed to the respective route handler,
+// which responds with a flag and success message.
+// The route is exported as a module for use in an Express application.
+// To test these routes, you need to login 
+// to obtain a valid JWT token and session cookie.

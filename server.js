@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 
-app.set('trust proxy', true);
+app.set('trust proxy', true); // Trust proxy for rate limiting is set to true, therefore enabling rate limiting even behind proxies
 
 // Global rate limiter
 const limiter = rateLimit({

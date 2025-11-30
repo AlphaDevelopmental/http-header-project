@@ -142,15 +142,15 @@ router.delete('/', (req, res) => {
   let flag;
 
   if (role === 'admin') {
-    flag = 'FLAG{admin_mastermind_verified}';
+    flag = 'FLAG_CLASSWORK8_ADMIN=FLAG{crypto_admin_hmac_md5_mastermind}';
   } else if (role === 'student') {
-    flag = 'FLAG{student_solved_the_layers}';
+    flag = 'FLAG_CLASSWORK8_STUDENT=FLAG{crypto_student_hmac_md5_solved}';
   } else {
     return res.status(403).json({ error: 'Unknown role' });
   }
 
   res.json({
-    flag,
+    flag: 'role === "admin" ? flag : flag,',
     message: '✅ Challenge 8 completed! You mastered cryptographic challenges!',
     congratulations: 'Amazing work! You completed all advanced challenges!',
     nextLevel: 'Try expert challenges: /classwork9 and /classwork10'
@@ -166,3 +166,12 @@ module.exports = router;
 // To test these routes, you need to login first of get you jwt token and cookies.
 // The DELETE endpoint requires cryptographic operations including MD5 hashing and HMAC-SHA256 signing.
 // The code is designed to provide a challenging exercise in HTTP headers, authentication, and cryptography.
+/*
+curl -X DELETE "http://localhost:4000/classwork8" \
+-H "Content-Type: application/json" \
+-H "X-Custom-Header: secretvalue" \
+-H "Authorization: Bearer <token_from_login>" \
+-H "X-Payload-Signature: <hmac_signature>" \
+--cookie "sessionid=<session_id_from_login>" \
+-d '{"challenge": "<challenge_from_login>", "response": "<md5_of_challenge>"}'
+*/ 

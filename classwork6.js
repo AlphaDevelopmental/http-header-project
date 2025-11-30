@@ -65,7 +65,7 @@ router.all('/', (req, res) => {
   }
 
   res.json({
-    flag: 'FLAG{delete_protectedroute_verified_passed}',
+    flag: 'FLAG_CLASSWORK6=FLAG{full_auth_stack_jwt_cookie_delete}',
     message: '✅ Challenge 6 completed!',
     nextChallenge: '/classwork7',
     difficulty: 'Increasing...'
@@ -78,3 +78,31 @@ module.exports = router;
 // and a valid session cookie. If any of these checks fail, it responds with an appropriate error message and hint.
 // If all checks pass, it responds with a JSON object containing a flag and a success message.
 // The route is exported as a module for use in an Express application.
+/*
+curl -X DELETE http://localhost:4000/classwork6 \
+-H "Content-Type: application/json" \
+-H "X-Custom-Header: secretvalue" \
+-H "Authorization: Bearer <token_from_login>" \
+--cookie "sessionid=<session_id_from_login>"
+*/
+
+// To test this route, you need to login to obtain a valid JWT token and session cookie.
+/*
+1. First, login to get the token and session cookie:
+curl -X POST http://localhost:4000/login \
+-H "Content-Type: application/json" \
+-d '{"username": "daniel", "password": "securepassword"}' \
+-c cookies.txt
+
+2. Extract the token from the login response and the sessionid from cookies.txt.
+
+3. Then, use the token and sessionid to access this DELETE route:
+curl -X DELETE http://localhost:4000/classwork6 \
+-H "Content-Type: application/json" \
+-H "X-Custom-Header: secretvalue" \
+-H "Authorization: Bearer <token_from_login>" \
+--cookie "sessionid=<session_id_from_login>"
+*/
+
+// The code is designed to provide feedback to the user about the checks they need to pass, making it suitable for educational or challenge purposes.
+// The code is structured to be modular, allowing it to be easily integrated into a larger Express application. 

@@ -54,7 +54,7 @@ router.post('/', (req, res) => {
   }
 
   res.json({
-    flag: 'FLAG{header_order_matters_expert}',
+    flag: 'FLAG_CLASSWORK10=FLAG{header_order_is_absolute_power}',
     message: '✅ Challenge 10 completed! You mastered header ordering!',
     congratulations: '🎉 You completed ALL challenges! You are an HTTP master!',
     achievement: 'HTTP Header CTF Champion',
@@ -70,10 +70,10 @@ module.exports = router;
 // If all checks pass, it responds with a JSON object containing a flag and a success message.
 // The route is exported as a module for use in an Express application.
 // To test this route, send a POST request with the required headers in the correct order and values.
-// Example using curl:
-// curl -X POST http://localhost:3000/classwork10 \
-//   -H "Content-Type: application/json" \
-//   -H "X-First: alpha" \
-//   -H "X-Second: beta" \
-//   -H "X-Third: gamma"
-//    The code is designed to provide a challenging exercise in HTTP header management and ordering.
+/*
+curl -X POST "http://localhost:4000/classwork10" \
+  -H "Content-Type: application/json" \
+  -H "X-First: alpha" \
+  -H "X-Second: beta" \
+  -H "X-Third: gamma"
+*/           

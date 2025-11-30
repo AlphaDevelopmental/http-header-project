@@ -23,7 +23,7 @@ const validateHeaders = (req, res, next) => {
   if (req.method !== 'OPTIONS') {
     return res.status(405).json({ 
       error: `Method ${req.method} not allowed`,
-      hint: 'Use OPTIONS method'
+      hint: 'Try the method used for CORS preflight requests'
     });
   }
 
@@ -84,7 +84,7 @@ router.options('/', validateHeaders, (req, res) => {
   }
 
   res.json({
-    flag: 'FLAG{multi-layered_http_master}',
+    flag: 'FLAG_CLASSWORK7=FLAG{regex_referer_options_god_mode}',
     message: '✅ Challenge 7 completed! Pattern matching mastered!',
     nextChallenge: '/classwork8',
     warning: 'Final challenge requires cryptography skills'
@@ -106,3 +106,12 @@ module.exports = router;
 // The session cookie value should match the expected SESSION_ID from the config.
 // This middleware is designed to be used in protected routes to ensure that only requests
 // meeting all criteria can access them.
+/*
+curl -X OPTIONS "http://localhost:3000/classwork7?access=granted" \
+  -H "Content-Type: application/json" \
+  -H "X-Custom-Header: QPD3f%opvalue" \
+  -H "X-Code-Name: agent-007" \
+  -H "Referer: https://trusted-client.local/page" \
+  --cookie "sessionid=<your_session_id>" \
+  -d '{"name": "cyber", "level": 5}'
+*/

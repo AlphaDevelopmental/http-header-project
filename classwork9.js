@@ -52,7 +52,7 @@ router.all('/', (req, res) => {
   }
 
   res.json({
-    flag: 'FLAG{rate_limit_bypass_discovered}',
+    flag: 'FLAG_CLASSWORK9=FLAG{rate_limit_bypass_token_owned}',
     message: '✅ Challenge 9 completed! Rate limit bypass found!',
     bypassUsed: bypassToken === 'bypass-rate-limit-2025',
     requestCount: requestCount[ip].count,

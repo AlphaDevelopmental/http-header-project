@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.all('/', (req, res) => {
+  const expectedMethod = 'POST';
   const method = req.method;
   const apiKey = req.headers['x-api-key'];
   const userAgent = req.headers['user-agent'];
@@ -15,7 +16,7 @@ router.all('/', (req, res) => {
     });
   }
 
-  if (method !== 'POST') {
+  if (method !== expectedMethod) {
     return res.status(405).json({ 
       error: `Method ${method} not allowed`,
       hint: 'This challenge requires POST method'
@@ -44,7 +45,7 @@ router.all('/', (req, res) => {
   }
 
   res.json({
-    flag: 'FLAG{post_api_key_body_validated!}',
+    flag: 'FLAG_CLASSWORK2=FLAG{post_json_api_key_verified!}',
     message: '✅ Challenge 2 completed!',
     nextChallenge: '/classwork3'
   });

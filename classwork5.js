@@ -56,7 +56,7 @@ const validateRequest = (req, res, next) => {
 
 router.put('/', validateRequest, (req, res) => {
   res.json({ 
-    flag: 'FLAG{put_with_headers_token_cookie_passed}', 
+    flag: 'FLAG_CLASSWORK5_PUT=FLAG{patch_with_jwt_cookie_authorized!}', 
     message: '✅ PUT challenge passed!',
     note: 'Try PATCH and DELETE methods too'
   });
@@ -64,7 +64,7 @@ router.put('/', validateRequest, (req, res) => {
 
 router.patch('/', validateRequest, (req, res) => {
   res.json({ 
-    flag: 'FLAG{patch_authorized_header_cookie_check_success}', 
+    flag: 'FLAG_CLASSWORK5_PATCH=FLAG{patch_with_jwt_cookie_success}', 
     message: '✅ PATCH challenge passed!',
     note: 'One more method to go!'
   });
@@ -72,7 +72,7 @@ router.patch('/', validateRequest, (req, res) => {
 
 router.delete('/', validateRequest, (req, res) => {
   res.json({ 
-    flag: 'FLAG{delete_header_cookie_jwt_validation_complete}', 
+    flag: 'FLAG_CLASSWORK5_DELETE=FLAG{patch_with_jwt_cookie_Complete!}', 
     message: '✅ DELETE challenge passed!',
     nextChallenge: '/classwork6'
   });
@@ -88,3 +88,26 @@ module.exports = router;
 // The route is exported as a module for use in an Express application.
 // To test these routes, you need to login 
 // to obtain a valid JWT token and session cookie.
+/*
+curl -X PUT http://localhost:3000/classwork5 \
+-H "Content-Type: application/json" \
+-H "X-Custom-Header: secretvalue" \
+-H "Authorization: Bearer <token_from_login>" \
+--cookie "sessionid=<session_id_from_login>"
+*/
+
+/* 
+curl -X PATCH http://localhost:3000/classwork5 \
+-H "Content-Type: application/json" \
+-H "X-Custom-Header: secretvalue" \
+-H "Authorization: Bearer <token_from_login>" \
+--cookie "sessionid=<session_id_from_login>"
+*/
+
+/* 
+curl -X DELETE http://localhost:3000/classwork5 \
+-H "Content-Type: application/json" \
+-H "X-Custom-Header: secretvalue" \ 
+-H "Authorization: Bearer <token_from_login>" \
+--cookie "sessionid=<session_id_from_login>"
+*/

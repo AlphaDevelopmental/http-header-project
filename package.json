@@ -18,7 +18,7 @@
     "authentication",
     "cors"
   ],
-  "author": "Your Name",
+  "author": "AlphaDevelopmental",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

@@ -69,7 +69,7 @@ router.all('/', (req, res) => {
   });
 
   res.json({
-    flag: 'FLAG{options_cors_preflight_mastered!}',
+    flag: 'FLAG_CLASSWORK4=FLAG{cors_preflight_mastered_2025!}',
     message: '✅ Challenge 4 completed! You understand CORS!',
     nextChallenge: '/classwork5',
     note: 'Next challenges require authentication. Visit /login first'
@@ -89,7 +89,7 @@ module.exports = router;
 // The code is designed to provide a challenge for users to pass by using the correct method and headers.
 // The flag is a placeholder and should be replaced with an actual flag value
 /*
-curl -X OPTIONS http://localhost:3000/classwork4 \
+  curl -X OPTIONS http://localhost:3000/classwork4 \
   -H "Content-Type: application/json" \
   -H "User-Agent: curl/7.85.0" \
   -H "X-Options-Token: cors-preflight-2024" \

@@ -37,7 +37,7 @@ router.all('/', (req, res) => {
   }
 
   res.json({
-    flag: 'FLAG{http_get_with_headers_success!}',
+    flag: 'FLAG_CLASSWORK1=FLAG{headers_unlock_the_door_2025}',
     message: '✅ Challenge 1 completed!',
     nextChallenge: '/classwork2'
   });

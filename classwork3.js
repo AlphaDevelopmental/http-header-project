@@ -3,6 +3,7 @@ const router = express.Router();
 
 router.all('/', (req, res) => {
   const method = req.method;
+  const expectedMethod = 'POST';
   const name = req.query.name;
   const acceptHeader = req.headers['accept'];
   const userAgent = req.headers['user-agent'];
@@ -23,7 +24,7 @@ router.all('/', (req, res) => {
     });
   }
 
-  if (method !== 'POST') {
+  if (method !== expectedMethod) {
     return res.status(405).json({ 
       error: `Method ${method} not allowed`,
       hint: 'Use POST method'
@@ -66,7 +67,7 @@ router.all('/', (req, res) => {
   }
 
   res.json({
-    flag: 'FLAG{post_query_headers_body_validated!}',
+    flag: 'FLAG_CLASSWORK3=FLAG{multi_layer_validation_crushed!}',
     message: `✅ Well done ${name}! Challenge 3 completed!`,
     nextChallenge: '/classwork4'
   });
@@ -86,8 +87,6 @@ module.exports = router;
 // The code is designed to provide feedback to the user about the checks they need to pass, making it suitable for educational or challenge purposes.
 // The code is structured to be modular, allowing it to be easily integrated into a larger Express application.
 
-// curl -H "Accept: application/json" "http://localhost:3000/?name=Simbiat"
-// This curl command sends a GET request to the server with the required Accept header and query parameter.
 /*
 curl -X POST "http://localhost:3000/classwork3?name=ibukunoluwa" \
   -H "Content-Type: application/json" \

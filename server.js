@@ -44,6 +44,12 @@ const classwork7 = require('./classwork7');
 const classwork8 = require('./classwork8');
 const classwork9 = require('./classwork9');
 const classwork10 = require('./classwork10');
+const classwork11 = require('./classwork11');
+const classwork12 = require('./classwork12');
+const classwork13 = require('./classwork13');
+const classwork14 = require('./classwork14');
+const classwork15 = require('./classwork15');
+
 const hintsRoute = require('./hints');
 
 // Mount routes
@@ -68,6 +74,13 @@ app.use('/classwork8', classwork8);
 // Expert challenges
 app.use('/classwork9', classwork9);
 app.use('/classwork10', classwork10);
+
+// Response Manipulation challenges
+app.use('/classwork11', classwork11);
+app.use('/classwork12', classwork12);
+app.use('/classwork13', classwork13);
+app.use('/classwork14', classwork14);
+app.use('/classwork15', classwork15);
 
 // Root endpoint
 app.get('/', (req, res) => {
